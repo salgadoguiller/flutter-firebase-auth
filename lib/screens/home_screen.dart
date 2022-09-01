@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatefulWidget {
+import '../blocs/app/app_bloc.dart';
+import '../models/user_model.dart';
+
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key, required this.title}) : super(key: key);
 
   final String title;
@@ -9,42 +13,41 @@ class HomeScreen extends StatefulWidget {
       MaterialPage<void>(child: HomeScreen(title: title));
 
   @override
-  State<HomeScreen> createState() => _HomeScreen();
-}
-
-class _HomeScreen extends State<HomeScreen> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    User user = context.select((AppBloc bloc) => bloc.state.user);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: Center(
+        // child: Text(
+        //   'Welcome to MEALIFY',
+        // ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Welcome to MEALIFY',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                '${user.email}',
+                style: Theme.of(context).textTheme.headline6,
+              ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: () {
+          context.read<AppBloc>().add(
+                AppLogoutRequested(),
+              );
+        },
+        tooltip: 'Logout',
+        child: const Icon(Icons.exit_to_app),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
