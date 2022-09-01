@@ -18,7 +18,7 @@ class AuthRepository {
     });
   }
 
-  Future<void> signup({
+  Future<void> createUserWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
@@ -30,7 +30,7 @@ class AuthRepository {
     } catch (_) {}
   }
 
-  Future<void> loginWithEmailAndPassword({
+  Future<void> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
@@ -42,7 +42,7 @@ class AuthRepository {
     } catch (_) {}
   }
 
-  Future<void> logout() async {
+  Future<void> signOut() async {
     try {
       await Future.wait([_firebaseAuth.signOut()]);
     } catch (_) {}

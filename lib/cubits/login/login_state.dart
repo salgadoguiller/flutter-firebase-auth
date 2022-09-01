@@ -1,10 +1,31 @@
 part of 'login_cubit.dart';
 
-abstract class SigninState extends Equatable {
-  const SigninState();
-
-  @override
-  List<Object> get props => [];
+enum LoginStatus {
+  initial,
+  loading,
+  success,
+  error,
 }
 
-class SigninInitial extends SigninState {}
+class LoginState extends Equatable {
+  final LoginStatus status;
+
+  const LoginState({
+    this.status = LoginStatus.initial,
+  });
+
+  factory LoginState.initial() => const LoginState(
+        status: LoginStatus.initial,
+      );
+
+  @override
+  List<Object> get props => [status];
+
+  LoginState copyWith({
+    LoginStatus? status,
+  }) {
+    return LoginState(
+      status: status ?? this.status,
+    );
+  }
+}

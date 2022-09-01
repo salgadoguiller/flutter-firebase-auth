@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../repositories/auth_repository.dart';
+import '../cubits/login/login_cubit.dart';
 import '../models/registration_form_model.dart';
 import '../widgets/mealify_banner.dart';
 import '../utilities/icon_selection.dart';
@@ -48,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _saveForm() {
+  void _saveForm(Function login) {
     _emailIsValid = _emailFormField.currentState!.validate();
     _passwordIsValid = _passwordFormField.currentState!.validate();
     final valid = _registrationForm.currentState!.validate();
@@ -57,6 +60,8 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     _registrationForm.currentState!.save();
+
+    login(formValues.email, formValues.password);
   }
 
   @override
@@ -160,22 +165,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(
                         height: 80,
                       ),
-                      ElevatedButton.icon(
-                        style: AppTheme.elevatedButtonFilledButton()
-                            .style
-                            ?.copyWith(
-                                minimumSize:
-                                    MaterialStateProperty.resolveWith<Size>(
-                                        (_) =>
-                                            const Size(double.infinity, 40))),
-                        onPressed: () {
-                          _saveForm();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_right_alt,
-                          size: 18.0,
+                      BlocProvider(
+                        create: (_) => LoginCubit(
+                          context.read<AuthRepository>(),
                         ),
-                        label: const Text('Sign in'),
+                        child: SigninButton(onPressed: _saveForm),
                       ),
                       const SizedBox(
                         height: 50,
@@ -202,6 +196,44 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SigninButton extends StatelessWidget {
+  final Function _onPressed;
+
+  const SigninButton({Key? key, required Function onPressed})
+      : _onPressed = onPressed,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LoginCubit, LoginState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        if (state.status == LoginStatus.loading) {
+          return const CircularProgressIndicator();
+        }
+
+        return ElevatedButton.icon(
+          style: AppTheme.elevatedButtonFilledButton().style?.copyWith(
+                minimumSize: MaterialStateProperty.resolveWith<Size>(
+                    (_) => const Size(double.infinity, 40)),
+              ),
+          onPressed: () {
+            Function loginFuntion =
+                context.read<LoginCubit>().logInWithCredentials;
+
+            _onPressed(loginFuntion);
+          },
+          icon: const Icon(
+            Icons.arrow_right_alt,
+            size: 18.0,
+          ),
+          label: const Text('Sign in'),
+        );
+      },
     );
   }
 }
