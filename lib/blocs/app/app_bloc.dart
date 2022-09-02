@@ -22,6 +22,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         ) {
     on<AppUserChanged>(_onUserChanged);
     on<AppLogoutRequested>(_onLogoutRequested);
+    on<AppPageChanged>(_onAppPageChanged);
 
     _userSubscription = _authRepository.user.listen((user) {
       add(AppUserChanged(user));
@@ -42,6 +43,13 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     Emitter<AppState> emit,
   ) {
     unawaited(_authRepository.signOut());
+  }
+
+  void _onAppPageChanged(
+    AppPageChanged event,
+    Emitter<AppState> emit,
+  ) {
+    emit(state.copyWith(currentPage: event.currentPage));
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:auth/blocs/app/app_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -182,8 +183,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text('Create account',
                                 style: Theme.of(context).textTheme.labelSmall),
                             onPressed: () {
-                              Navigator.of(context)
-                                  .push<void>(SignupScreen.route());
+                              context.read<AppBloc>().add(
+                                    const AppPageChanged(
+                                      AppCurrentPage.signup,
+                                    ),
+                                  );
                             },
                           )
                         ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/app/app_bloc.dart';
 import '../cubits/signup/signup_cubit.dart';
 import '../models/registration_form_model.dart';
 import '../repositories/auth_repository.dart';
@@ -12,8 +13,8 @@ import '../styles/themes.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
-  static Route route() =>
-      MaterialPageRoute<void>(builder: (_) => const SignupScreen());
+
+  static Page page() => const MaterialPage<void>(child: SignupScreen());
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -60,7 +61,6 @@ class _SignupScreenState extends State<SignupScreen> {
     _registrationForm.currentState!.save();
 
     signup(formValues.email, formValues.password);
-    Navigator.of(context).pop();
   }
 
   // always dispose controlers and focusnodes
@@ -265,7 +265,11 @@ class _SignupScreenState extends State<SignupScreen> {
                             child: Text('Log in',
                                 style: Theme.of(context).textTheme.labelSmall),
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              context.read<AppBloc>().add(
+                                    const AppPageChanged(
+                                      AppCurrentPage.login,
+                                    ),
+                                  );
                             },
                           )
                         ],

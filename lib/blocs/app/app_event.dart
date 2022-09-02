@@ -17,3 +17,12 @@ class AppUserChanged extends AppEvent {
   @override
   List<Object> get props => [user];
 }
+
+class AppPageChanged extends AppEvent {
+  final AppCurrentPage currentPage;
+
+  const AppPageChanged(this.currentPage);
+
+  @override
+  List<Object> get props => [currentPage];
+}
