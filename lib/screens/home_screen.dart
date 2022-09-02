@@ -9,6 +9,7 @@ class HomeScreen extends StatelessWidget {
 
   final String title;
 
+  static const routeName = '/home';
   static Page page(String title) =>
       MaterialPage<void>(child: HomeScreen(title: title));
 

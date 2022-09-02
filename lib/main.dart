@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import './repositories/auth_repository.dart';
 import './blocs/app/app_bloc.dart';
 import './config/routes.dart';
+import './screens/home_screen.dart';
+import './screens/login_screen.dart';
+import './screens/signup_screen.dart';
 
 import './firebase_options.dart';
 

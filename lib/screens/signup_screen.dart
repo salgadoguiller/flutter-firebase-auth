@@ -9,10 +9,8 @@ import '../styles/themes.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
-  static const String routeName = '/registration';
-  static const String routeTitle = 'Registration';
-
-  static Page page() => const MaterialPage<void>(child: SignupScreen());
+  static Route route() =>
+      MaterialPageRoute<void>(builder: (_) => const SignupScreen());
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -271,7 +269,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                             child: Text('Log in',
                                 style: Theme.of(context).textTheme.labelSmall),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
                           )
                         ],
                       )

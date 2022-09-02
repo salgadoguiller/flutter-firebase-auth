@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../repositories/auth_repository.dart';
 import '../cubits/login/login_cubit.dart';
 import '../models/registration_form_model.dart';
-import '../widgets/mealify_banner.dart';
+import '../repositories/auth_repository.dart';
+import '../screens/signup_screen.dart';
 import '../utilities/icon_selection.dart';
 import '../utilities/validation_functions.dart';
+import '../widgets/mealify_banner.dart';
 import '../styles/themes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
-  static const String routeName = '/login-page';
-  static const String routeTitle = 'Login';
-
   static Page page() => const MaterialPage<void>(child: LoginScreen());
 
   @override
@@ -184,7 +181,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             child: Text('Create account',
                                 style: Theme.of(context).textTheme.labelSmall),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(SignupScreen.route());
+                            },
                           )
                         ],
                       ),
