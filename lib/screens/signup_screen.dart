@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../cubits/signup/signup_cubit.dart';
 import '../models/registration_form_model.dart';
+import '../repositories/auth_repository.dart';
 import '../widgets/mealify_banner.dart';
 import '../widgets/checkbox.dart';
 import '../utilities/icon_selection.dart';
@@ -44,7 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
     confirmedTerms: false,
   );
 
-  void _saveForm() {
+  void _saveForm(BuildContext context, Function signup) {
     _emailIsValid = _emailFormField.currentState!.validate();
     _passwordIsValid = _passwordFormField.currentState!.validate();
     _confirmedPasswordIsValid =
@@ -55,6 +58,9 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
     _registrationForm.currentState!.save();
+
+    signup(formValues.email, formValues.password);
+    Navigator.of(context).pop();
   }
 
   // always dispose controlers and focusnodes
@@ -234,22 +240,11 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(
                         height: 50,
                       ),
-                      ElevatedButton.icon(
-                        style: AppTheme.elevatedButtonFilledButton()
-                            .style
-                            ?.copyWith(
-                                minimumSize:
-                                    MaterialStateProperty.resolveWith<Size>(
-                                        (_) =>
-                                            const Size(double.infinity, 40))),
-                        onPressed: () {
-                          _saveForm();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_right_alt,
-                          size: 18.0,
+                      BlocProvider(
+                        create: (_) => SignupCubit(
+                          context.read<AuthRepository>(),
                         ),
-                        label: const Text('Sign in'),
+                        child: SignupButton(onPressed: _saveForm),
                       ),
                       const SizedBox(
                         height: 50,
@@ -283,6 +278,44 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SignupButton extends StatelessWidget {
+  final Function _onPressed;
+
+  const SignupButton({Key? key, required Function onPressed})
+      : _onPressed = onPressed,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignupCubit, SignupState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        if (state.status == SignupStatus.loading) {
+          return const CircularProgressIndicator();
+        }
+
+        return ElevatedButton.icon(
+          style: AppTheme.elevatedButtonFilledButton().style?.copyWith(
+                minimumSize: MaterialStateProperty.resolveWith<Size>(
+                    (_) => const Size(double.infinity, 40)),
+              ),
+          onPressed: () {
+            Function signupFuntion =
+                context.read<SignupCubit>().createUserWithEmailAndPassword;
+
+            _onPressed(context, signupFuntion);
+          },
+          icon: const Icon(
+            Icons.arrow_right_alt,
+            size: 18.0,
+          ),
+          label: const Text('Sign in'),
+        );
+      },
     );
   }
 }

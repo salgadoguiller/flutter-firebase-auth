@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         create: (_) => LoginCubit(
                           context.read<AuthRepository>(),
                         ),
-                        child: SigninButton(onPressed: _saveForm),
+                        child: LoginButton(onPressed: _saveForm),
                       ),
                       const SizedBox(
                         height: 50,
@@ -182,7 +182,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text('Create account',
                                 style: Theme.of(context).textTheme.labelSmall),
                             onPressed: () {
-                              Navigator.of(context).push(SignupScreen.route());
+                              Navigator.of(context)
+                                  .push<void>(SignupScreen.route());
                             },
                           )
                         ],
@@ -199,10 +200,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class SigninButton extends StatelessWidget {
+class LoginButton extends StatelessWidget {
   final Function _onPressed;
 
-  const SigninButton({Key? key, required Function onPressed})
+  const LoginButton({Key? key, required Function onPressed})
       : _onPressed = onPressed,
         super(key: key);
 
