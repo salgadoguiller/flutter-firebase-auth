@@ -1,11 +1,10 @@
-import 'package:auth/blocs/app/app_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/app/app_bloc.dart';
 import '../cubits/login/login_cubit.dart';
 import '../models/registration_form_model.dart';
 import '../repositories/auth_repository.dart';
-import '../screens/signup_screen.dart';
 import '../utilities/icon_selection.dart';
 import '../utilities/validation_functions.dart';
 import '../widgets/mealify_banner.dart';
